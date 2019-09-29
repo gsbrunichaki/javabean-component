@@ -4,6 +4,12 @@
             "type": "java",
             "name": "CodeLens (Launch) - Persistence",
             "request": "launch",
+            "mainClass": "persistentbean.Persistence"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Persistence",
+            "request": "launch",
             "mainClass": "persistentbean.Persistence",
             "projectName": "javabean-component_b7825111"
         }

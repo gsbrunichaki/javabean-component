@@ -1,64 +1,58 @@
 package persistentbean;
- //Feijão Persistente
 
- import java.io.File;
-
+import java.io.File;
+import java.util.Properties;
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 
 public class Persistence {
   private String file;
+  private Properties props;
 
   public Persistence() {
     this.file = null;
+    this.props = null;
   }
 
   public String getFile() {
     return this.file;
   }
 
-  public void setFile(String file) {
+  public void setFile(String file) throws IOException {
     this.file = file;
+    this.syncProps();
   }
 
-  public boolean fileExists() {
+  public File syncFile() throws IOException {
     File file = new File(this.file);
-    return file.exists();
-  }
-
-  public void createFile() {
-    File file = new File(this.file);
-
-    if (!fileExists()) {
+    if (!file.exists())
       file.createNewFile();
-    }
+
+    return file;
   }
 
-  public ArrayList<String> readFile() {
-    try {
-      FileReader textFile = new FileReader(this.file);
-      BufferedReader readFile = new BufferedReader(textFile);
-
-      ArrayList<String> lines = new ArrayList<String>();
-
-      while (readFile.ready()) {
-        lines.add(readFile.readLine());
-      }
-
-      textFile.close();
-
-      return lines;
-    } catch (IOException e) {
-      System.err.printf("Erro na abertura do arquivo: %s.\n", e.getMessage());
-    }
-
+  public void syncProps() throws IOException {
+    this.syncFile();
+    Properties props = new Properties();
+    props.load(new FileInputStream(this.file));
+    this.props = props;
   }
 
-  public void writeFile() {
-
-    FileWriter arq = new FileWriter("d:\\tabuada.txt");
-    PrintWriter gravarArq = new PrintWriter(arq);
+  public String getProperty(String key) {
+    return this.props.getProperty(key);
   }
 
+  public void setProperty(String key, String value) throws IOException {
+    this.props.setProperty(key, value);
+    this.saveProperties();
+  }
+
+  public void saveProperties() throws IOException {
+    FileOutputStream fr = new FileOutputStream(this.file);
+    this.props.store(fr, "Properties");
+    fr.close();
+  }
 }
